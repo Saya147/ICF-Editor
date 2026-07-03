@@ -37,9 +37,29 @@ ICF-Editor.exe
 
 ## 发布方式
 
-- 仅发布 Windows x64 独立版 `ICF-Editor.exe`
+- 项目源代码在本仓库公开提供
+- Releases 页面提供 Windows x64 独立版 `ICF-Editor.exe`
 - EXE 已包含运行所需组件，无须另外安装 .NET
-- 本仓库不提供源代码、工程文件或调试符号
+
+## 从源代码构建
+
+构建环境：
+
+- .NET 6 SDK 或更高版本
+- MinGW-w64 `g++`
+- Windows 10/11 x64
+
+在 PowerShell 中运行：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\build.ps1
+```
+
+构建结果位于：
+
+```text
+artifacts\ICF-Editor.exe
+```
 
 ## 使用方法
 

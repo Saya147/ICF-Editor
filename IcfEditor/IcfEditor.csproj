@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyName>ICF-Editor</AssemblyName>
+    <RootNamespace>IcfEditor</RootNamespace>
+    <Authors>Saya</Authors>
+    <Company>Saya</Company>
+    <Product>ICF Editor</Product>
+    <Description>ICF file editor by Saya</Description>
+    <Copyright>Copyright © Saya 2026</Copyright>
+    <Version>1.0.0</Version>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\native\bin\IcfCodec.dll" Link="IcfCodec.dll" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>
