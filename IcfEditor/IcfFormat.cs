@@ -16,15 +16,48 @@ public sealed class IcfRecord
     public string SourceVersion { get; set; } = "1.00.00";
     public DateTime SourceDate { get; set; } = new(2000, 1, 1);
     public string SourceRequiredVersion { get; set; } = "111.01.01";
+    public string Status { get => EncodeStatus(RecordMarker); set => RecordMarker = DecodeStatus(value); }
 
-    public string FileName(string systemId, string appId) => Kind switch
+    public string FileName(string systemId, string appId)
     {
-        RecordKind.Pack => $"{appId}_{Version}_{Date:yyyyMMddHHmmss}_0.pack",
-        RecordKind.App => $"{systemId}_{Version}_{Date:yyyyMMddHHmmss}_0.app",
-        RecordKind.Opt => $"{systemId}_{Version}_{Date:yyyyMMddHHmmss}_0.opt",
-        RecordKind.Patch => $"{systemId}_{Version}_{Date:yyyyMMddHHmmss}_1_{SourceVersion}.app",
-        _ => $"[已安装状态/Reader隐藏] {systemId}_{Version}_{Date:yyyyMMddHHmmss}_1_{SourceVersion}.app"
-    };
+        string name = Kind switch
+        {
+            RecordKind.Pack => $"{appId}_{Version}_{Date:yyyyMMddHHmmss}_0.pack",
+            RecordKind.App => $"{systemId}_{Version}_{Date:yyyyMMddHHmmss}_0.app",
+            RecordKind.Opt => $"{systemId}_{Version}_{Date:yyyyMMddHHmmss}_0.opt",
+            RecordKind.Patch => $"{systemId}_{Version}_{Date:yyyyMMddHHmmss}_1_{SourceVersion}.app",
+            _ => $"[?????/Reader??] {systemId}_{Version}_{Date:yyyyMMddHHmmss}_1_{SourceVersion}.app"
+        };
+        return name + Status;
+    }
+
+    private static string EncodeStatus(uint marker)
+    {
+        ushort val16 = (ushort)(marker & 0xffff);
+        return val16 switch
+        {
+            0x0102 => "",
+            0x0101 => "#installing",
+            0x0201 => "#downloading",
+            0x0202 => "#staged",
+            _ => "#" + (((val16 >> 8) | (val16 << 8)) & 0xffff).ToString("x4")
+        };
+    }
+
+    private static uint DecodeStatus(string? status)
+    {
+        status = (status ?? "").Trim();
+        if (status.Length == 0) return 0x00000102u;
+        if (status == "#installing") return 0x00000101u;
+        if (status == "#downloading") return 0x00000201u;
+        if (status == "#staged") return 0x00000202u;
+        if (status.Length == 5 && status[0] == '#' && ushort.TryParse(status[1..], System.Globalization.NumberStyles.HexNumber, null, out ushort raw))
+        {
+            return (uint)(((raw >> 8) | (raw << 8)) & 0xffff);
+        }
+        throw new FormatException("???????????#installing?#downloading?#staged ? #0000 ???");
+    }
+
 }
 
 public sealed class IcfDocument

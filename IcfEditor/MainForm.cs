@@ -34,6 +34,7 @@ public sealed class MainForm : Form
         grid.Columns.Add(new DataGridViewComboBoxColumn { HeaderText = "类型", DataPropertyName = nameof(IcfRecord.Kind), DataSource = Enum.GetValues<RecordKind>(), Width = 80 });
         AddText("版本 / Opt标识", nameof(IcfRecord.Version), 105); AddDate("日期时间", nameof(IcfRecord.Date)); AddText("依赖系统版本", nameof(IcfRecord.RequiredVersion), 110);
         AddText("来源版本（补丁）", nameof(IcfRecord.SourceVersion), 120); AddDate("来源日期（补丁）", nameof(IcfRecord.SourceDate)); AddText("来源依赖版本", nameof(IcfRecord.SourceRequiredVersion), 115);
+        grid.Columns.Add(new DataGridViewComboBoxColumn { HeaderText = "状态后缀", DataPropertyName = nameof(IcfRecord.Status), DataSource = new[] { "", "#installing", "#downloading", "#staged" }, Width = 105 });
         var preview = new DataGridViewTextBoxColumn { HeaderText = "生成的文件名预览", ReadOnly = true, AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill, MinimumWidth = 260 };
         grid.Columns.Add(preview);
         grid.CellFormatting += (_, e) =>
